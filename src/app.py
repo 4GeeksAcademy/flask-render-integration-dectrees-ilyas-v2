@@ -1,8 +1,19 @@
 from flask import Flask, request, render_template
 from pickle import load
 
+
 app = Flask(__name__)
-model = load(open("/workspaces/flask-render-integration-dectrees-ilyas-v2/models/decision_tree_classifier_default_42.sav", "rb"))
+
+try:
+    # Get the directory where app.py is located
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    model_path = os.path.join(BASE_DIR, "models", "decision_tree_classifier_default_42.sav")
+    model = load(open(model_path, "rb"))
+except Exception as e:
+    print(f"Error loading model: {str(e)}")
+    traceback.print_exc()
+    raise
+
 class_dict = {
     "0": "Iris setosa",
     "1": "Iris versicolor",
